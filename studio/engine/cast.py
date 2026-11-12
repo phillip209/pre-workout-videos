@@ -24,11 +24,14 @@ def hero(pose: dict | None = None) -> Image.Image:
     """
     p = {"arm_l": (10, 10), "arm_r": (10, 10), "bicep": 0.5, "belly": 0.0, "mouth": "smile",
          "eyes": "open", "walk": None, "bob": 0, "look": 0, "sweat": False, "holding": None,
-         "tint_arm": 0.0, "droop": 0.0}
+         "tint_arm": 0.0, "droop": 0.0, "style": "leo"}
     if pose:
         p.update(pose)
     S = new(56, 72)
     d = ImageDraw.Draw(S)
+    ana = p["style"] == "ana"
+    TANK, TANK_D = (P["pink"], (200, 90, 140)) if ana else (P["tank"], P["tank_d"])
+    HAIR = (120, 60, 40) if ana else P["hair"]
     cx = 28
     by = 70 - int(p["bob"])          # feet line
     hip = by - 18
@@ -45,25 +48,35 @@ def hero(pose: dict | None = None) -> Image.Image:
     # ---- torso (tank top) + belly
     bel = clamp(p["belly"])
     tw = 9 + int(bel * 3)
-    d.rounded_rectangle([cx - tw, sh_y, cx + tw, hip + 2], radius=3, fill=P["tank"])
-    d.rectangle([cx - tw, sh_y + 2, cx - tw + 1, hip], fill=P["tank_d"])
+    d.rounded_rectangle([cx - tw, sh_y, cx + tw, hip + 2], radius=3, fill=TANK)
+    d.rectangle([cx - tw, sh_y + 2, cx - tw + 1, hip], fill=TANK_D)
     if bel > 0.05:
         r = 3 + int(bel * 6)
-        d.ellipse([cx - r - 1, hip - 6 - r, cx + r + 1, hip - 6 + r + 2], fill=P["tank"])
-        d.arc([cx - r - 1, hip - 6 - r, cx + r + 1, hip - 6 + r + 2], 20, 160, fill=P["tank_d"])
+        d.ellipse([cx - r - 1, hip - 6 - r, cx + r + 1, hip - 6 + r + 2], fill=TANK)
+        d.arc([cx - r - 1, hip - 6 - r, cx + r + 1, hip - 6 + r + 2], 20, 160, fill=TANK_D)
     d.line([cx - 4, sh_y, cx, sh_y + 4, cx + 4, sh_y], fill=P["skin"], width=2)  # neckline
     # ---- head
     hy = sh_y - 15 + int(p["droop"] * 2)
     d.rectangle([cx - 2, sh_y - 3, cx + 2, sh_y + 1], fill=P["skin_d"])      # neck
     d.rounded_rectangle([cx - 8, hy, cx + 8, hy + 14], radius=4, fill=P["skin"])
     d.rectangle([cx - 8, hy + 9, cx - 7, hy + 12], fill=P["skin_d"])
-    # hair (spiky top)
-    d.rounded_rectangle([cx - 9, hy - 2, cx + 9, hy + 4], radius=3, fill=P["hair"])
-    for i, hx in enumerate(range(cx - 8, cx + 8, 4)):
-        d.polygon([(hx, hy - 1), (hx + 2, hy - 4 - (i % 2)), (hx + 4, hy - 1)], fill=P["hair"])
-    d.rectangle([cx + 6, hy + 2, cx + 8, hy + 6], fill=P["hair"])
-    # headband
-    d.rectangle([cx - 8, hy + 3, cx + 8, hy + 4], fill=P["red"])
+    if ana:
+        # smooth hair + high ponytail that swings
+        sw = int(round(math.sin((p["walk"] or 0) * 1.0))) if p["walk"] is not None else 0
+        d.rounded_rectangle([cx - 9, hy - 2, cx + 9, hy + 5], radius=4, fill=HAIR)
+        d.rectangle([cx - 9, hy + 2, cx - 7, hy + 9], fill=HAIR)
+        d.ellipse([cx + 7 + sw, hy - 4, cx + 13 + sw, hy + 2], fill=HAIR)
+        d.polygon([(cx + 10 + sw, hy), (cx + 15 + sw, hy + 6), (cx + 12 + sw, hy + 14), (cx + 9 + sw, hy + 5)],
+                  fill=HAIR)
+        d.rectangle([cx + 8 + sw, hy - 1, cx + 9 + sw, hy + 1], fill=P["sky"])  # hair tie
+    else:
+        # hair (spiky top)
+        d.rounded_rectangle([cx - 9, hy - 2, cx + 9, hy + 4], radius=3, fill=HAIR)
+        for i, hx in enumerate(range(cx - 8, cx + 8, 4)):
+            d.polygon([(hx, hy - 1), (hx + 2, hy - 4 - (i % 2)), (hx + 4, hy - 1)], fill=HAIR)
+        d.rectangle([cx + 6, hy + 2, cx + 8, hy + 6], fill=HAIR)
+        # headband
+        d.rectangle([cx - 8, hy + 3, cx + 8, hy + 4], fill=P["red"])
     # eyes
     ex = int(round(p["look"] * 1))
     ey = hy + 7
@@ -78,6 +91,8 @@ def hero(pose: dict | None = None) -> Image.Image:
             d.point((sx + ex, ey), fill=P["ink"])
         else:
             d.rectangle([sx + ex, ey, sx + ex, ey + 1], fill=P["ink"])
+        if ana and e not in ("blink", "closed", "happy"):
+            d.point((sx + (-1 if sx < cx else 1), ey - 1), fill=P["ink"])  # lashes
         if e == "sad":
             d.line([sx - 1, ey - 2 + (1 if sx < cx else 0), sx + 1, ey - 2 + (0 if sx < cx else 1)], fill=P["hair"])
     # mouth
@@ -524,4 +539,169 @@ def end_bg(t=0.0) -> Image.Image:
         x, y = rnd.randrange(W), rnd.randrange(H)
         if (int(t * 4) + i) % 7 != 0:
             d.point((x, y), fill=P["fog"] if i % 4 else P["gold"])
+    return img
+
+
+# ============================================================ MORE PROPS
+def bed(sleeper: Image.Image | None = None, blanket=P["blue"], t=0.0) -> Image.Image:
+    S = new(90, 50)
+    d = ImageDraw.Draw(S)
+    d.rectangle([2, 10, 8, 48], fill=P["wood"])
+    d.rectangle([82, 24, 87, 48], fill=P["wood"])
+    d.rectangle([6, 30, 84, 38], fill=P["white"])
+    d.rounded_rectangle([10, 22, 26, 31], radius=3, fill=P["cream"])
+    breathe = int(round(math.sin(t * 2.2)))
+    if sleeper is not None:
+        S.alpha_composite(sleeper, (10, 30 - sleeper.height + 4))
+    d.rounded_rectangle([24, 26 - breathe, 84, 38], radius=4, fill=blanket)
+    d.line([26, 28 - breathe, 82, 28 - breathe], fill=lerpc(blanket, P["white"], 0.35))
+    d.rectangle([6, 38, 84, 41], fill=P["wood_d"])
+    return outline(S)
+
+
+def sleeping_head(mood="calm") -> Image.Image:
+    S = new(20, 16)
+    d = ImageDraw.Draw(S)
+    d.rounded_rectangle([1, 2, 17, 15], radius=4, fill=P["skin"])
+    d.rounded_rectangle([1, 0, 17, 5], radius=3, fill=P["hair"])
+    d.rectangle([1, 4, 17, 5], fill=P["red"])
+    if mood == "calm":
+        d.line([5, 9, 7, 9], fill=P["ink"])
+        d.line([11, 9, 13, 9], fill=P["ink"])
+    else:  # tired: eyes open, dark circles
+        d.rectangle([5, 8, 6, 9], fill=P["ink"])
+        d.rectangle([11, 8, 12, 9], fill=P["ink"])
+        d.line([4, 11, 7, 11], fill=P["violet"])
+        d.line([10, 11, 13, 11], fill=P["violet"])
+    return S
+
+
+def digital_clock(text="03:00", color=P["red"]) -> Image.Image:
+    from .font import draw_text, text_width
+    w = text_width(text, 2) + 12
+    S = new(w, 30)
+    d = ImageDraw.Draw(S)
+    d.rounded_rectangle([0, 2, w - 1, 27], radius=4, fill=P["ink"], outline=P["steel_d"])
+    draw_text(S, text, 6, 6, color=color, scale=2)
+    d.rectangle([4, 27, 8, 29], fill=P["steel_d"])
+    d.rectangle([w - 9, 27, w - 5, 29], fill=P["steel_d"])
+    return outline(S)
+
+
+def coffee(t=0.0, mood="happy", steam=True) -> Image.Image:
+    S = new(40, 46)
+    d = ImageDraw.Draw(S)
+    d.rounded_rectangle([6, 16, 30, 42], radius=4, fill=P["white"])
+    d.ellipse([27, 22, 37, 34], outline=P["white"], width=3)
+    d.rectangle([8, 18, 28, 21], fill=P["wood_d"])
+    d.line([8, 40, 28, 40], fill=P["fog"])
+    d.rectangle([12, 27, 13, 29], fill=P["ink"])
+    d.rectangle([22, 27, 23, 29], fill=P["ink"])
+    if mood == "happy":
+        d.line([14, 33, 16, 34, 20, 34, 22, 33], fill=P["ink"])
+    elif mood == "smug":
+        d.line([14, 34, 22, 33], fill=P["ink"])
+    else:
+        d.rectangle([17, 32, 19, 34], fill=P["ink"])
+    d.point((11, 31), fill=P["pink"])
+    d.point((24, 31), fill=P["pink"])
+    if steam:
+        for i, sx in enumerate((12, 18, 24)):
+            for k in range(3):
+                y = 13 - ((t * 14 + i * 4 + k * 5) % 14)
+                x = sx + math.sin(t * 5 + k + i) * 1.5
+                d.point((x, y), fill=P["fog"])
+    return outline(S)
+
+
+def doc_stack(n=5) -> Image.Image:
+    S = new(48, 14 + n * 4)
+    d = ImageDraw.Draw(S)
+    for i in range(n):
+        y = S.height - 14 - i * 4
+        off = int(math.sin(i * 1.7) * 2)
+        d.rectangle([4 + off, y, 40 + off, y + 10], fill=P["white"] if i % 2 else P["cream"])
+        d.line([8 + off, y + 3, 32 + off, y + 3], fill=P["fog"])
+    return outline(S)
+
+
+def stationary_bike(t=0.0, rider: Image.Image | None = None) -> Image.Image:
+    S = new(70, 80)
+    d = ImageDraw.Draw(S)
+    if rider is not None:
+        S.alpha_composite(rider, (6, 0))
+    d.rectangle([8, 74, 62, 77], fill=P["steel_d"])
+    d.line([18, 74, 26, 50], fill=P["steel"], width=3)
+    d.line([52, 74, 48, 46], fill=P["steel"], width=3)
+    d.ellipse([12, 54, 34, 76], outline=P["steel_d"], width=2)
+    a = t * 18
+    d.line([23, 65, 23 + math.cos(a) * 6, 65 + math.sin(a) * 6], fill=P["red"], width=2)
+    d.rectangle([20, 46, 32, 49], fill=P["ink"])
+    d.line([48, 46, 56, 40], fill=P["steel"], width=2)
+    return outline(S)
+
+
+def tiny_person(color=P["fog"]) -> Image.Image:
+    S = new(5, 9)
+    d = ImageDraw.Draw(S)
+    d.rectangle([1, 0, 3, 2], fill=P["skin"])
+    d.rectangle([0, 3, 4, 6], fill=color)
+    d.rectangle([1, 7, 1, 8], fill=P["shorts"])
+    d.rectangle([3, 7, 3, 8], fill=P["shorts"])
+    return S
+
+
+def protein_block(color=P["muscle_l"]) -> Image.Image:
+    S = new(10, 8)
+    d = ImageDraw.Draw(S)
+    d.rectangle([1, 1, 8, 6], fill=color)
+    d.line([2, 2, 6, 2], fill=P["white"])
+    return outline(S)
+
+
+def shoe() -> Image.Image:
+    S = new(22, 12)
+    d = ImageDraw.Draw(S)
+    d.rounded_rectangle([1, 3, 20, 10], radius=3, fill=P["white"])
+    d.rectangle([1, 8, 20, 10], fill=P["red"])
+    d.line([6, 4, 10, 4], fill=P["steel_d"])
+    d.line([6, 6, 10, 6], fill=P["steel_d"])
+    return outline(S)
+
+
+def smartwatch(text="0") -> Image.Image:
+    from .font import draw_text, text_width
+    w = max(48, text_width(text, 2) + 16)
+    S = new(w, 44)
+    d = ImageDraw.Draw(S)
+    d.rectangle([w // 2 - 8, 0, w // 2 + 8, 43], fill=P["ink"])
+    d.rounded_rectangle([1, 8, w - 2, 36], radius=6, fill=P["steel_d"])
+    d.rounded_rectangle([4, 11, w - 5, 33], radius=4, fill=P["night"])
+    draw_text(S, text, (w - text_width(text, 2)) // 2, 14, color=P["green"], scale=2)
+    return outline(S)
+
+
+def bedroom_bg(t=0.0, dawn=0.0) -> Image.Image:
+    img = new(W, H, P["night"] + (255,))
+    top = lerpc(P["ink"], P["violet"], dawn)
+    vgradient(img, (0, 0, W, 330), [(0, top), (1, lerpc(P["night"], P["deep"], dawn))])
+    d = ImageDraw.Draw(img)
+    # window with moon / sun
+    vgradient(img, (150, 50, 240, 150), [(0, lerpc(P["ink"], P["pink"], dawn)), (1, lerpc(P["deep"], P["orange"], dawn))])
+    if dawn < 0.5:
+        d.ellipse([200, 64, 216, 80], fill=P["cream"])
+        d.ellipse([205, 61, 221, 77], fill=lerpc(P["ink"], P["pink"], dawn))
+    else:
+        d.ellipse([180, 110, 210, 140], fill=P["gold"])
+    rnd = random.Random(4)
+    for i in range(10):
+        if (int(t * 3) + i) % 5:
+            d.point((152 + rnd.randrange(86), 52 + rnd.randrange(50)), fill=P["fog"])
+    d.rectangle([146, 46, 244, 50], fill=P["wood_d"])
+    d.rectangle([146, 150, 244, 155], fill=P["wood_d"])
+    d.rectangle([193, 46, 197, 155], fill=P["wood_d"])
+    # nightstand
+    d.rectangle([20, 280, 60, 330], fill=P["wood"])
+    d.rectangle([20, 280, 60, 284], fill=P["wood_d"])
+    vgradient(img, (0, 330, W, H), [(0, P["violet"]), (1, P["night"])])
     return img
