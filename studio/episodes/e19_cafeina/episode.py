@@ -174,7 +174,7 @@ def make_director(tl):
             if g > c("aero", "correr"):
                 rider = cast.hero({"walk": g * 14, "mouth": "grin", "arm_l": (20 * math.sin(g * 14), 40),
                                    "arm_r": (-20 * math.sin(g * 14), 40)})
-                paste(img, rider, lerp(-30, 225, prog(g, c("aero", "correr"), 1.6)), 330, scale=1.5)
+                paste(img, rider, lerp(-30, 300, prog(g, c("aero", "correr"), 1.8)), 342, scale=1)
         return img
 
     # 6. CAVEAT: quality gauge + who was studied
