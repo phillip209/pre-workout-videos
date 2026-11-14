@@ -34,10 +34,13 @@ def count_day(t: float, keys: list[tuple], dur: float = 0.6) -> float:
     return day
 
 
-def day_counter(img, day: float, max_day: int, t: float, flash: float = 0.0, y: int = 8) -> None:
-    """Big 'DÍA N' at the top centre with a progress bar underneath. flash 0..1 = bounce + gold tint."""
+def day_counter(img, day: float, max_day: int, t: float, flash: float = 0.0, y: int = 8,
+                fmt: str = "DÍA {n}", text: str | None = None) -> None:
+    """Big 'DÍA N' at the top centre with a progress bar underneath. flash 0..1 = bounce + gold tint.
+    fmt formats the rounded value (e.g. 'NOCHE {n}', 'SEMANA {n}'); text overrides it entirely
+    (e.g. a clock '16:00') while `day/max_day` still drives the progress bar."""
     n = int(round(day))
-    txt = f"DÍA {n}"
+    txt = text if text is not None else fmt.format(n=n)
     s = 3
     bump = 1 + 0.25 * math.sin(clamp(flash) * math.pi)
     spr = gfx.new(text_width(txt, s) + 8, 9 * s + 8)

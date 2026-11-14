@@ -227,7 +227,7 @@ def impact_text(img, text, x, y, t, t0, color=P["gold"], max_w=250, scale=4, out
     if t < t0:
         return
     s = scale
-    while s > 1 and text_width(text, s) + 8 > max_w:
+    while s > 1 and (text_width(text, s) + 8) * 1.2 > max_w:   # room for the landing stretch
         s -= 1
     spr = gfx.new(text_width(text, s) + 10, 9 * s + 10)
     draw_text(spr, text, 5, 4, color=color, scale=s, outline=P["ink"], shadow=True)
