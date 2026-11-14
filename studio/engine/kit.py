@@ -218,3 +218,68 @@ def street_bg(g, scroll=0.0, tod="night"):
         if tod != "sunrise":
             d.rectangle([x - 4, 200, x + 7, 202], fill=P["fat_l"])
     return img
+
+
+# ---------------------------------------------------------------- "¿Qué le pasa a tu cuerpo si…?" helpers
+def impact_text(img, text, x, y, t, t0, color=P["gold"], max_w=250, scale=4, out_t=None):
+    """Big punchy word(s): squash-and-stretch pop-in at t0, thick outline, auto-shrinks to fit max_w.
+    out_t: if given, the text shrinks away after that time."""
+    if t < t0:
+        return
+    s = scale
+    while s > 1 and text_width(text, s) + 8 > max_w:
+        s -= 1
+    spr = gfx.new(text_width(text, s) + 10, 9 * s + 10)
+    draw_text(spr, text, 5, 4, color=color, scale=s, outline=P["ink"], shadow=True)
+    spr = gfx.outline(spr, P["ink"])
+    p = prog(t, t0, 0.28)
+    k = ease_back(p)
+    sx = k * (1 + 0.25 * math.sin(min(p, 1) * math.pi))   # stretch wide while landing
+    sy = k * (1 - 0.15 * math.sin(min(p, 1) * math.pi))
+    if out_t is not None and t > out_t:
+        q = 1 - ease_in(prog(t, out_t, 0.18))
+        sx *= q
+        sy *= q
+    if sx <= 0.03 or sy <= 0.03:
+        return
+    wob = math.sin((t - t0) * 9) * 1.5 if p >= 1 else 0
+    big = spr.resize((max(1, int(spr.width * sx)), max(1, int(spr.height * sy))), Image.NEAREST)
+    img.alpha_composite(big, (int(x - big.width / 2), int(y - big.height / 2 + wob)))
+
+
+def count_text(start, end, t, t0, dur=0.8, fmt="{:.1f}"):
+    """Number that counts from start to end between t0 and t0+dur; Spanish decimal comma."""
+    v = lerp(start, end, ease_out(prog(t, t0, dur)))
+    return fmt.format(v).replace(".", ",")
+
+
+def xray(base, inner, cx, cy, p):
+    """Circular scanner lens growing from radius 0 (p=0) to full screen (p=1) showing `inner`."""
+    if p <= 0:
+        return base
+    if p >= 1:
+        return inner
+    r = int(lerp(0, math.hypot(W, H), ease_in(p) * 0.25 + ease_out(p) * 0.75) * 0.6) + 2
+    mask = Image.new("L", (W, H), 0)
+    md = ImageDraw.Draw(mask)
+    md.ellipse([cx - r, cy - r, cx + r, cy + r], fill=255)
+    out = base.copy()
+    out.paste(inner, (0, 0), mask)
+    d = ImageDraw.Draw(out)
+    d.ellipse([cx - r, cy - r, cx + r, cy + r], outline=P["green"], width=3)
+    d.ellipse([cx - r - 4, cy - r - 4, cx + r + 4, cy + r + 4], outline=P["green_d"], width=1)
+    return out
+
+
+def split_before_after(left, right, p, labels=("DÍA 1", "DÍA 90")):
+    """Right image wipes in over the left from the right edge; a divider line + both labels."""
+    out = left.copy()
+    x = int(lerp(W, W // 2, ease_out(p)))
+    if x < W:
+        out.paste(right.crop((x, 0, W, H)), (x, 0))
+    d = ImageDraw.Draw(out)
+    d.rectangle([x - 2, 0, x + 1, H], fill=P["white"])
+    label(out, labels[0], max(40, x // 2), 62, color=P["red_l"], scale=2)
+    if p > 0.3:
+        label(out, labels[1], x + (W - x) // 2, 62, color=P["green"], scale=2)
+    return out

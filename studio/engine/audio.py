@@ -198,6 +198,40 @@ def sfx(name: str) -> np.ndarray:
         d = 0.5
         t = t_axis(d)
         return (osc("square", 330, d, 0.3) * 0.3 + osc("square", 497, d, 0.3) * 0.2) * np.exp(-t * 9)
+    if name == "tick":
+        d = 0.05
+        t = t_axis(d)
+        return osc("square", 1800, d, 0.25) * np.exp(-t * 80) * 0.35
+    if name == "scan":
+        d = 0.7
+        t = t_axis(d)
+        f = 300 + 900 * (t / d)
+        return (osc("square", f, d, 0.5) * 0.12 * (0.5 + 0.5 * np.sin(t * 60)) + lowpass(osc("noise", 0, d), 4) * 0.08) * np.sin(np.pi * t / d)
+    if name == "babble":
+        d = 0.45
+        t = t_axis(d)
+        f = 520 + 180 * np.sign(np.sin(t * 2 * np.pi * 11)) + 60 * np.sin(t * 37)
+        gate = (np.sin(t * 2 * np.pi * 9) > -0.2).astype(float)
+        return osc("square", f, d, 0.25) * gate * np.exp(-t * 2) * 0.22
+    if name == "bar_up":
+        d = 0.35
+        t = t_axis(d)
+        return osc("square", 400 * 2 ** (t * 4), d, 0.25) * np.exp(-t * 4) * 0.22
+    if name == "bar_down":
+        d = 0.4
+        t = t_axis(d)
+        return osc("square", 700 * 2 ** (-t * 4), d, 0.5) * np.exp(-t * 4) * 0.22
+    if name == "rewind":
+        d = 0.6
+        t = t_axis(d)
+        f = 1400 * 2 ** (-t * 5) * (1 + 0.15 * np.sign(np.sin(t * 2 * np.pi * 30)))
+        return (osc("square", f, d, 0.5) * 0.18 + crush(osc("noise", 0, d), 6) * 0.08) * np.sin(np.pi * t / d)
+    if name == "growl":
+        d = 0.9
+        t = t_axis(d)
+        f = 70 + 25 * np.sin(t * 2 * np.pi * 7)
+        g = lowpass(osc("noise", 0, d), 25) * 1.6 + osc("saw", f, d) * 0.5
+        return crush(g, 10) * np.minimum(1, t * 8) * np.exp(-t * 1.6) * 0.7
     raise ValueError(name)
 
 
@@ -231,6 +265,9 @@ def music(total: float, sections: list[tuple[float, float, str]], bpm=96) -> np.
     kick, snare, hat = _drum("kick"), _drum("snare"), _drum("hat")
     for (s, e, mood) in sections:
         if mood == "silence":
+            continue
+        if mood in ("pulse", "drive", "low", "triumph"):
+            _music_v2(buf, s, e, mood, bpm, kick, snare, hat)
             continue
         scale = "major" if mood in ("hope", "outro") else "minor"
         prog = PROG[scale]
@@ -283,6 +320,65 @@ def music(total: float, sections: list[tuple[float, float, str]], bpm=96) -> np.
                     lead = osc("tri", midi(root + 24 + chord[2]), d) * env(int(d * SR), 0.05, 0.3, 0.5, 0.6)
                     place(buf, lead * 0.07 * g, tb)
     return buf
+
+
+def _music_v2(buf, s, e, mood, bpm, kick, snare, hat):
+    """Phase moods for the body-change format.
+    pulse: heartbeat kick + ticking hat + low drone (hook mystery)
+    drive: bass eighths + snare backbeat + 16th arps, tempo-feel rises across the section (milestones)
+    low: filtered minor pad, half-time, no hats (the 'valley')
+    triumph: major, full drums, lead melody (reveal)"""
+    beat = 60.0 / bpm
+    nb = int((e - s) / beat) + 1
+    scale = "major" if mood == "triumph" else "minor"
+    prog_ = PROG[scale]
+    for b in range(nb):
+        tb = s + b * beat
+        if tb >= e:
+            break
+        g = min(1.0, (e - tb) / (beat * 0.75))
+        root, chord = prog_[(b // 4) % 4]
+        if mood == "pulse":
+            place(buf, kick * 0.7 * g, tb)
+            place(buf, kick * 0.45 * g, tb + beat * 0.28)
+            place(buf, hat * 0.3 * g, tb + beat / 2)
+            if b % 4 == 0:
+                d = min(beat * 4, e - tb)
+                dr = osc("saw", midi(root - 24), d) * env(int(d * SR), 0.3, 0.3, 0.7, 0.4)
+                place(buf, lowpass(dr, 30) * 0.22 * g, tb)
+        elif mood == "low":
+            if b % 4 == 0:
+                d = min(beat * 4, e - tb)
+                pad = sum(osc("saw", midi(root + c), d) for c in chord) / 3
+                place(buf, lowpass(pad, 60) * env(len(pad), 0.2, 0.4, 0.6, 0.5) * 0.25 * g, tb)
+            if b % 2 == 0:
+                place(buf, kick * 0.5 * g, tb)
+        elif mood == "drive":
+            frac = (tb - s) / max(0.01, e - s)
+            for h in range(2):
+                d = beat / 2 * 0.85
+                nb_ = osc("square", midi(root - 24 + (12 if h else 0)), d, 0.5) * env(int(d * SR), 0.003, 0.06, 0.6, 0.05)
+                place(buf, nb_ * 0.13 * g, tb + h * beat / 2)
+            subdiv = 4 if frac > 0.5 else 2
+            for q in range(subdiv):
+                d = beat / subdiv * 0.8
+                na = osc("square", midi(root + 12 + chord[(b * subdiv + q) % 3]), d, 0.25) * env(int(d * SR), 0.002, 0.04, 0.3, 0.03)
+                place(buf, na * 0.06 * g, tb + q * beat / subdiv)
+            place(buf, kick * 0.6 * g, tb) if b % 2 == 0 else place(buf, snare * 0.45 * g, tb)
+            place(buf, hat * 0.35 * g, tb + beat / 2)
+        elif mood == "triumph":
+            for h in range(2):
+                d = beat / 2 * 0.85
+                nb_ = osc("square", midi(root - 24 + (12 if h else 0)), d, 0.5) * env(int(d * SR), 0.003, 0.06, 0.6, 0.05)
+                place(buf, nb_ * 0.14 * g, tb + h * beat / 2)
+            mel = [12, 16, 19, 24, 19, 16, 19, 24]
+            d = beat * 0.9
+            ld = osc("square", midi(root + 12 + mel[b % 8] - (0 if 4 in chord else 1)), d, 0.5) * env(int(d * SR), 0.005, 0.1, 0.5, 0.1)
+            place(buf, ld * 0.07 * g, tb)
+            place(buf, kick * 0.65 * g, tb)
+            if b % 2 == 1:
+                place(buf, snare * 0.5 * g, tb)
+            place(buf, hat * 0.4 * g, tb + beat / 2)
 
 
 # ---------------------------------------------------------------- mix
