@@ -167,6 +167,16 @@ def make_director(tl):
         if g > t_sen - 0.4:
             label(img, "CAMINANDO", 200, 214, color=P["green"])
         label(img, "AZÚCAR DESPUÉS DE COMER", 138, 292, color=P["fog"])
+        # micro-motion once the chart is complete: a marker travels both curves (no still frame > 0.7 s)
+        if g > t_sen - 0.2:
+            from PIL import ImageDraw
+            d = ImageDraw.Draw(img)
+            u = (g * 0.7) % 1
+            for pts, col in ((sit, P["red_l"]), (walk, P["green"])):
+                yv = pts[int(u * 20)][1]
+                x = box[0] + u * (box[2] - box[0])
+                y = box[3] - yv * (box[3] - box[1])
+                d.ellipse([x - 4, y - 4, x + 4, y + 4], fill=col, outline=P["white"])
 
     s_data = st.inner_metric(lambda g: cast.lab_bg(g), hudl, draw_chart,
                              texts=[(t_7, t_sen - 0.5, "7 ESTUDIOS", P["gold"], 3, 84)],

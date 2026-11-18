@@ -47,5 +47,20 @@
     "status": "planned",
     "test": "CTA asking for a concrete answer",
     "variable": "CTA wording"
+  },
+  {
+    "control": "voiced story Shorts b01v2-b04 (57-62% stayed, 66-68% viewed)",
+    "created_at": "2026-11-18T19:34:23+00:00",
+    "hypothesis": "A no-voice, text-led Short (subtitles at reading pace + music/SFX) can hold retention comparable to the voiced story format",
+    "id": "EXP-004",
+    "metrics": [
+      "stayed_to_watch_pct",
+      "avg_pct_viewed",
+      "public_views"
+    ],
+    "observation": "24h, 72h, 7d",
+    "status": "ready",
+    "test": "b05_caminar_sin_voz (39.8 s)",
+    "variable": "narration (none) - NOTE: b05 also carries the EXP-001 outcome-first hook, so results cannot be attributed to a single variable"
   }
 ]

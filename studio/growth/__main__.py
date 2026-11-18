@@ -19,9 +19,13 @@ from .qc import run_qc, save_report
 STUDIO = Path(__file__).resolve().parent.parent
 
 
-def cmd_qc(slug: str) -> int:
+def cmd_qc(slug: str, variant: str = "") -> int:
+    """variant "silent" checks the no-voice render (<slug>_sin_voz.mp4); voice-timing checks don't apply."""
     out = STUDIO / "out" / slug
-    rep = run_qc(slug, out / f"{slug}.mp4", out / "timeline.json")
+    if variant == "silent":
+        rep = run_qc(f"{slug}_sin_voz", out / f"{slug}_sin_voz.mp4", None)
+    else:
+        rep = run_qc(slug, out / f"{slug}.mp4", out / "timeline.json")
     save_report(rep)
     for c in rep["automated"]:
         print(f"  [{'OK' if c['pass'] else 'FAIL'}] {c['check']}: {c['value']} (expected {c['expected']})")
@@ -69,7 +73,7 @@ def main(argv: list[str]) -> int:
         return 2
     cmd, *rest = argv
     if cmd == "qc":
-        return cmd_qc(rest[0])
+        return cmd_qc(rest[0], rest[1] if len(rest) > 1 else "")
     if cmd == "snapshot":
         return cmd_snapshot(rest[0], rest[1], rest[2:])
     if cmd == "idea":

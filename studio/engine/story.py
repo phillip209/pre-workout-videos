@@ -199,6 +199,8 @@ def inner_metric(bg: Callable, hudl: Hud, draw_inner: Callable, texts=(), src=No
     def f(g):
         img = bg(g)
         draw_inner(img, g)
+        # slow push-in + drift: data scenes are mostly static otherwise (QC still-frame rule)
+        img = gfx.camera(img, 1.0 + 0.05 * (0.5 + 0.5 * math.sin(g * 1.3)), 135 + 6 * math.sin(g * 0.9), 220)
         if src:
             source(img, src)
         texts_layer(img, g, texts)

@@ -39,7 +39,9 @@ def load_episode(path: Path):
     return mod
 
 
-def build_timeline(ep, outdir: Path, preview: bool):
+def build_timeline(ep, outdir: Path, preview: bool, read_rate: float = 1.0):
+    """preview=True -> estimated timing (silent). read_rate < 1 compresses it to an on-screen reading pace
+    for the no-voice format; "hold" values are honoured there too."""
     lines_cfg = ep.LINES
     lead = getattr(ep, "LEAD_IN", 0.25)
     voice = np.zeros(1)
@@ -48,9 +50,11 @@ def build_timeline(ep, outdir: Path, preview: bool):
     if preview:
         for cfg in lines_cfg:
             ws, dur = estimate_words(cfg["text"])
+            ws = [(w, a * read_rate, b * read_rate) for (w, a, b) in ws]
+            dur *= read_rate
             words = [Word(w, t + a, t + b, cfg["id"]) for (w, a, b) in ws]
             lines.append(Line(cfg["id"], cfg["text"], t, t + dur, words))
-            t += dur + cfg.get("pause", 0.35)
+            t += dur + cfg.get("pause", 0.35) * read_rate + (cfg.get("hold", 0.0) if read_rate != 1.0 else 0.0)
         total = t + getattr(ep, "TAIL", 1.6)
         return Timeline(lines, total, estimated=True), np.zeros(int(total * SR))
 
@@ -138,8 +142,11 @@ def mix_audio(ep, tl, voice):
     return mix / peak * 0.89
 
 
-def render(ep, tl, outdir: Path, wav: Path, name: str, frames_only=None):
+def render(ep, tl, outdir: Path, wav: Path, name: str, frames_only=None, silent=False):
     director = ep.make_director(tl)
+    if silent:   # no voice: show each subtitle chunk fully (no karaoke dimming); emphasis colours stay
+        director.sub.spoken_dim = director.sub.base
+        director.sub.active = director.sub.base
     if frames_only is not None:
         for ts in frames_only:
             img = director.frame(ts)
@@ -162,8 +169,13 @@ def render(ep, tl, outdir: Path, wav: Path, name: str, frames_only=None):
     proc.stdin.close()
     proc.wait()
     final = outdir / f"{name}.mp4"
+    # no-voice mixes are SFX-peaky: compress first so loudnorm reaches -14 LUFS; a final limiter keeps
+    # true peak under -1 dBFS in every mode
+    af = "loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000,alimiter=limit=0.85:level=false"
+    if silent:
+        af = "acompressor=threshold=-20dB:ratio=4:attack=5:release=120:makeup=2," + af
     subprocess.run([ff, "-y", "-v", "error", "-i", str(raw), "-i", str(wav), "-map", "0:v", "-map", "1:a",
-                    "-c:v", "copy", "-af", "loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000", "-c:a", "aac",
+                    "-c:v", "copy", "-af", af, "-c:a", "aac",
                     "-b:a", "192k", "-shortest", "-movflags", "+faststart", str(final)], check=True)
     raw.unlink(missing_ok=True)
     return final
@@ -173,25 +185,29 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("episode")
     ap.add_argument("--preview", action="store_true")
+    ap.add_argument("--silent", action="store_true",
+                    help="final no-voice version: text-led subtitles at reading pace + music/SFX")
+    ap.add_argument("--read-rate", type=float, default=0.8)
     ap.add_argument("--frames", default=None, help="comma separated seconds -> PNG stills")
     a = ap.parse_args()
     epdir = (ROOT / a.episode).resolve()
     ep = load_episode(epdir)
     outdir = ROOT / "out" / epdir.name
     outdir.mkdir(parents=True, exist_ok=True)
-    preview = a.preview
-    tl, voice = build_timeline(ep, outdir, preview)
-    (outdir / ("timeline_preview.json" if preview else "timeline.json")).write_text(
+    preview = a.preview or a.silent
+    tl, voice = build_timeline(ep, outdir, preview, read_rate=a.read_rate if a.silent else 1.0)
+    tl_name = "timeline_silent.json" if a.silent else ("timeline_preview.json" if preview else "timeline.json")
+    (outdir / tl_name).write_text(
         json.dumps(tl.to_json(), ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"timeline: {tl.total:.1f}s ({'ESTIMADO' if tl.estimated else 'ElevenLabs'})")
     if a.frames:
         render(ep, tl, outdir, None, "", frames_only=[float(x) for x in a.frames.split(",")])
         return
     mix = mix_audio(ep, tl, voice)
-    name = ep.SLUG + ("_PREVIEW_SIN_VOZ" if preview else "")
+    name = ep.SLUG + ("_sin_voz" if a.silent else ("_PREVIEW_SIN_VOZ" if preview else ""))
     wav = outdir / f"{name}.wav"
     audio.write_wav(wav, mix)
-    final = render(ep, tl, outdir, wav, name)
+    final = render(ep, tl, outdir, wav, name, silent=a.silent)
     print("OK ->", final)
 
 
