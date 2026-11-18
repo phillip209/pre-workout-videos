@@ -150,15 +150,19 @@ def render(ep, tl, outdir: Path, wav: Path, name: str, frames_only=None, silent=
     if frames_only is not None:
         for ts in frames_only:
             img = director.frame(ts)
-            img.resize((W * 2, H * 2), 0).save(outdir / f"still_{ts:06.2f}.png")
+            (img if getattr(ep, "NATIVE", False) else img.resize((W * 2, H * 2), 0)).save(outdir / f"still_{ts:06.2f}.png")
         print("stills ->", outdir)
         return None
     ff = ffmpeg_exe()
     raw = outdir / f"{name}_video.mp4"
     nframes = int(tl.total * FPS)
-    cmd = [ff, "-y", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS),
-           "-i", "-", "-vf", f"scale={W * SCALE}:{H * SCALE}:flags=neighbor", "-c:v", "libx264",
-           "-preset", "medium", "-crf", "16", "-pix_fmt", "yuv420p", str(raw)]
+    if getattr(ep, "NATIVE", False):   # episodes drawn directly at 1080x1920 (crystal engine)
+        cmd = [ff, "-y", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", "1080x1920", "-r", str(FPS),
+               "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p", str(raw)]
+    else:
+        cmd = [ff, "-y", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS),
+               "-i", "-", "-vf", f"scale={W * SCALE}:{H * SCALE}:flags=neighbor", "-c:v", "libx264",
+               "-preset", "medium", "-crf", "16", "-pix_fmt", "yuv420p", str(raw)]
     proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     t0 = time.time()
     for i in range(nframes):

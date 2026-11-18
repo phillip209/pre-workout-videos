@@ -221,6 +221,47 @@ def sfx(name: str) -> np.ndarray:
         d = 0.4
         t = t_axis(d)
         return osc("square", 700 * 2 ** (-t * 4), d, 0.5) * np.exp(-t * 4) * 0.22
+    if name == "snore":
+        d = 1.2
+        t = t_axis(d)
+        return lowpass(osc("noise", 0, d), 60) * (0.5 + 0.5 * np.sin(2 * np.pi * 0.9 * t)) ** 3 * 1.6
+    if name == "breath":
+        d = 0.7
+        t = t_axis(d)
+        return lowpass(osc("noise", 0, d), 20) * np.sin(np.pi * t / d) ** 2 * 0.9
+    if name == "knock":
+        d = 0.35
+        t = t_axis(d)
+        k = np.zeros_like(t)
+        for off in (0.0, 0.17):
+            i = int(off * SR)
+            n = min(len(t) - i, int(0.06 * SR))
+            k[i:i + n] += (np.sin(2 * np.pi * 180 * t[:n]) + lowpass(osc("noise", 0, n / SR), 6) * 0.6) * np.exp(-t[:n] * 60)
+        return k * 0.8
+    if name == "wiii":
+        d = 0.6
+        t = t_axis(d)
+        return np.sin(2 * np.pi * np.cumsum(np.linspace(500, 1400, len(t))) / SR) * np.sin(np.pi * t / d) * 0.25
+    if name == "clink":
+        d = 0.5
+        t = t_axis(d)
+        return (np.sin(2 * np.pi * 2350 * t) * 0.5 + np.sin(2 * np.pi * 3170 * t) * 0.3) * np.exp(-t * 9) * 0.5
+    if name == "slide":
+        d = 0.5
+        t = t_axis(d)
+        return lowpass(osc("noise", 0, d), 30) * np.sin(np.pi * t / d) * 1.2
+    if name == "bubble":
+        d = 0.18
+        t = t_axis(d)
+        return np.sin(2 * np.pi * np.cumsum(np.linspace(300, 900, len(t))) / SR) * np.exp(-t * 18) * 0.35
+    if name == "swell":
+        d = 1.2
+        t = t_axis(d)
+        return (lowpass(osc("noise", 0, d), 40) * 0.8 + np.sin(2 * np.pi * 220 * t) * 0.15) * (t / d) ** 2
+    if name == "soft_step":
+        d = 0.16
+        t = t_axis(d)
+        return (np.sin(2 * np.pi * 70 * t) * 0.7 + lowpass(osc("noise", 0, d), 12) * 0.5) * np.exp(-t * 30) * 0.8
     if name == "rewind":
         d = 0.6
         t = t_axis(d)
@@ -268,6 +309,9 @@ def music(total: float, sections: list[tuple[float, float, str]], bpm=96) -> np.
             continue
         if mood in ("pulse", "drive", "low", "triumph"):
             _music_v2(buf, s, e, mood, bpm, kick, snare, hat)
+            continue
+        if mood.startswith("c_"):
+            _music_cine(buf, s, e, mood, bpm)
             continue
         scale = "major" if mood in ("hope", "outro") else "minor"
         prog = PROG[scale]
@@ -379,6 +423,55 @@ def _music_v2(buf, s, e, mood, bpm, kick, snare, hat):
             if b % 2 == 1:
                 place(buf, snare * 0.5 * g, tb)
             place(buf, hat * 0.4 * g, tb + beat / 2)
+
+
+def _pad(freqs, d, a=0.6, r=0.8):
+    t = t_axis(d)
+    x = sum(np.sin(2 * np.pi * f * t + i) * (0.6 if i else 1.0) + 0.25 * np.sin(2 * np.pi * f * 2.003 * t)
+            for i, f in enumerate(freqs)) / len(freqs)
+    x *= 1 + 0.08 * np.sin(2 * np.pi * 4.5 * t)
+    return x * env(len(t), a, 0.3, 0.85, r)
+
+
+def _soft_kick(d=0.35):
+    t = t_axis(d)
+    return np.sin(2 * np.pi * np.cumsum(np.linspace(110, 42, len(t))) / SR) * np.exp(-t * 11)
+
+
+def _music_cine(buf, s, e, mood, bpm):
+    """Soft cinematic moods for the Leo Cristal format (sine pads, plucks, soft kicks; no chiptune).
+    c_amb: low pad + drone · c_wonder: pad + plucked arpeggio · c_pulse: heartbeat kick + pad
+    c_lift: pad + steady soft beat + arp · c_resolve: bright major pad + bells"""
+    beat = 60.0 / bpm
+    nb = int((e - s) / beat) + 1
+    major = mood in ("c_resolve", "c_lift", "c_wonder")
+    prog_ = PROG["major" if major else "minor"]
+    kick = _soft_kick()
+    for b in range(nb):
+        tb = s + b * beat
+        if tb >= e:
+            break
+        g = min(1.0, (e - tb) / (beat * 1.5))
+        root, chord = prog_[(b // 8) % 4]
+        if b % 8 == 0:
+            d = min(beat * 8, e - tb) + 0.6
+            freqs = [midi(root + 12 + c) for c in chord] + [midi(root)]
+            lvl = {"c_amb": 0.16, "c_pulse": 0.13, "c_wonder": 0.12, "c_lift": 0.11, "c_resolve": 0.15}[mood]
+            place(buf, _pad(freqs, d) * lvl * g, tb)
+        if mood in ("c_wonder", "c_lift", "c_resolve"):
+            for q in range(2):
+                n = root + 24 + chord[(b * 2 + q) % 3] + (12 if mood == "c_resolve" and q else 0)
+                d = beat * 0.9
+                t = t_axis(d)
+                pl = np.sin(2 * np.pi * midi(n) * t) * np.exp(-t * 7)
+                place(buf, pl * (0.05 if mood != "c_resolve" else 0.06) * g, tb + q * beat / 2)
+        if mood == "c_pulse":
+            place(buf, kick * 0.35 * g, tb)
+            place(buf, kick * 0.22 * g, tb + beat * 0.3)
+        if mood == "c_lift":
+            place(buf, kick * 0.3 * g, tb)
+            n = osc("noise", 0, 0.03)
+            place(buf, (n - lowpass(n, 3)) * np.exp(-t_axis(0.03) * 120) * 0.08 * g, tb + beat / 2)
 
 
 # ---------------------------------------------------------------- mix
