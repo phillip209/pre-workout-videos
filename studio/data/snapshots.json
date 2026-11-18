@@ -1,0 +1,302 @@
+[
+  {
+    "id": "v01_descanso@2026-11-18T22:00:00+00:00@youtube_public_page",
+    "metrics": {
+      "public_views": 105
+    },
+    "note": "Public count.",
+    "provenance": "measured",
+    "source": "youtube_public_page",
+    "taken_at": "2026-11-18T22:00:00+00:00",
+    "video_id": "v01_descanso"
+  },
+  {
+    "id": "v02_ayunas@2026-11-18T22:00:00+00:00@youtube_public_page",
+    "metrics": {
+      "public_views": 53
+    },
+    "note": "Public count.",
+    "provenance": "measured",
+    "source": "youtube_public_page",
+    "taken_at": "2026-11-18T22:00:00+00:00",
+    "video_id": "v02_ayunas"
+  },
+  {
+    "id": "v03_proteina30g@2026-11-18T22:00:00+00:00@youtube_public_page",
+    "metrics": {
+      "public_views": 1000
+    },
+    "note": "Public count; YouTube rounds ≥1000 to 0.1 K.",
+    "provenance": "measured",
+    "source": "youtube_public_page",
+    "taken_at": "2026-11-18T22:00:00+00:00",
+    "video_id": "v03_proteina30g"
+  },
+  {
+    "id": "v04_agujetas@2026-11-18T22:00:00+00:00@youtube_public_page",
+    "metrics": {
+      "public_views": 1100
+    },
+    "note": "Public count; YouTube rounds ≥1000 to 0.1 K.",
+    "provenance": "measured",
+    "source": "youtube_public_page",
+    "taken_at": "2026-11-18T22:00:00+00:00",
+    "video_id": "v04_agujetas"
+  },
+  {
+    "id": "v05_abdominales@2026-11-18T22:00:00+00:00@youtube_public_page",
+    "metrics": {
+      "public_views": 1100
+    },
+    "note": "Public count; YouTube rounds ≥1000 to 0.1 K.",
+    "provenance": "measured",
+    "source": "youtube_public_page",
+    "taken_at": "2026-11-18T22:00:00+00:00",
+    "video_id": "v05_abdominales"
+  },
+  {
+    "id": "v06_ventana@2026-11-18T22:00:00+00:00@youtube_public_page",
+    "metrics": {
+      "public_views": 1100
+    },
+    "note": "Public count; YouTube rounds ≥1000 to 0.1 K.",
+    "provenance": "measured",
+    "source": "youtube_public_page",
+    "taken_at": "2026-11-18T22:00:00+00:00",
+    "video_id": "v06_ventana"
+  },
+  {
+    "id": "v07_creatina@2026-11-18T22:00:00+00:00@youtube_public_page",
+    "metrics": {
+      "public_views": 491
+    },
+    "note": "Public count.",
+    "provenance": "measured",
+    "source": "youtube_public_page",
+    "taken_at": "2026-11-18T22:00:00+00:00",
+    "video_id": "v07_creatina"
+  },
+  {
+    "id": "v08_pesado@2026-11-18T22:00:00+00:00@youtube_public_page",
+    "metrics": {
+      "public_views": 777
+    },
+    "note": "Public count.",
+    "provenance": "measured",
+    "source": "youtube_public_page",
+    "taken_at": "2026-11-18T22:00:00+00:00",
+    "video_id": "v08_pesado"
+  },
+  {
+    "id": "v09_sentadilla@2026-11-18T22:00:00+00:00@youtube_public_page",
+    "metrics": {
+      "public_views": 1200
+    },
+    "note": "Public count; YouTube rounds ≥1000 to 0.1 K.",
+    "provenance": "measured",
+    "source": "youtube_public_page",
+    "taken_at": "2026-11-18T22:00:00+00:00",
+    "video_id": "v09_sentadilla"
+  },
+  {
+    "id": "v10_estirar@2026-11-18T22:00:00+00:00@youtube_public_page",
+    "metrics": {
+      "public_views": 1000
+    },
+    "note": "Public count; YouTube rounds ≥1000 to 0.1 K.",
+    "provenance": "measured",
+    "source": "youtube_public_page",
+    "taken_at": "2026-11-18T22:00:00+00:00",
+    "video_id": "v10_estirar"
+  },
+  {
+    "id": "e15_musculo_grasa@2026-11-18T22:00:00+00:00@youtube_public_page",
+    "metrics": {
+      "public_views": 1600
+    },
+    "note": "Public count; YouTube rounds ≥1000 to 0.1 K.",
+    "provenance": "measured",
+    "source": "youtube_public_page",
+    "taken_at": "2026-11-18T22:00:00+00:00",
+    "video_id": "e15_musculo_grasa"
+  },
+  {
+    "id": "e20_musculo_pesa@2026-11-18T22:00:00+00:00@youtube_public_page",
+    "metrics": {
+      "public_views": 1200
+    },
+    "note": "Public count; YouTube rounds ≥1000 to 0.1 K.",
+    "provenance": "measured",
+    "source": "youtube_public_page",
+    "taken_at": "2026-11-18T22:00:00+00:00",
+    "video_id": "e20_musculo_pesa"
+  },
+  {
+    "id": "e16_pasos@2026-11-18T22:00:00+00:00@youtube_public_page",
+    "metrics": {
+      "public_views": 1200
+    },
+    "note": "Public count; YouTube rounds ≥1000 to 0.1 K.",
+    "provenance": "measured",
+    "source": "youtube_public_page",
+    "taken_at": "2026-11-18T22:00:00+00:00",
+    "video_id": "e16_pasos"
+  },
+  {
+    "id": "e21_agujetas@2026-11-18T22:00:00+00:00@youtube_public_page",
+    "metrics": {
+      "public_views": 1200
+    },
+    "note": "Public count; YouTube rounds ≥1000 to 0.1 K.",
+    "provenance": "measured",
+    "source": "youtube_public_page",
+    "taken_at": "2026-11-18T22:00:00+00:00",
+    "video_id": "e21_agujetas"
+  },
+  {
+    "id": "b01v2_azucar@2026-11-18T22:00:00+00:00@youtube_public_page",
+    "metrics": {
+      "public_views": 1200
+    },
+    "note": "Public count; YouTube rounds ≥1000 to 0.1 K.",
+    "provenance": "measured",
+    "source": "youtube_public_page",
+    "taken_at": "2026-11-18T22:00:00+00:00",
+    "video_id": "b01v2_azucar"
+  },
+  {
+    "id": "b02_dormir@2026-11-18T22:00:00+00:00@youtube_public_page",
+    "metrics": {
+      "public_views": 1300
+    },
+    "note": "Public count; YouTube rounds ≥1000 to 0.1 K.",
+    "provenance": "measured",
+    "source": "youtube_public_page",
+    "taken_at": "2026-11-18T22:00:00+00:00",
+    "video_id": "b02_dormir"
+  },
+  {
+    "id": "b03_cafe@2026-11-18T22:00:00+00:00@youtube_public_page",
+    "metrics": {
+      "public_views": 1300
+    },
+    "note": "Public count; YouTube rounds ≥1000 to 0.1 K.",
+    "provenance": "measured",
+    "source": "youtube_public_page",
+    "taken_at": "2026-11-18T22:00:00+00:00",
+    "video_id": "b03_cafe"
+  },
+  {
+    "id": "b04_alcohol@2026-11-18T22:00:00+00:00@youtube_public_page",
+    "metrics": {
+      "public_views": 1300
+    },
+    "note": "Public count; YouTube rounds ≥1000 to 0.1 K.",
+    "provenance": "measured",
+    "source": "youtube_public_page",
+    "taken_at": "2026-11-18T22:00:00+00:00",
+    "video_id": "b04_alcohol"
+  },
+  {
+    "id": "e23_ninos_pesas@2026-11-18T22:00:00+00:00@youtube_public_page",
+    "metrics": {
+      "public_views": 1100
+    },
+    "note": "Public count; YouTube rounds ≥1000 to 0.1 K.",
+    "provenance": "measured",
+    "source": "youtube_public_page",
+    "taken_at": "2026-11-18T22:00:00+00:00",
+    "video_id": "e23_ninos_pesas"
+  },
+  {
+    "id": "e19_cafeina@2026-11-18T22:00:00+00:00@youtube_public_page",
+    "metrics": {
+      "public_views": 1200
+    },
+    "note": "Public count; YouTube rounds ≥1000 to 0.1 K.",
+    "provenance": "measured",
+    "source": "youtube_public_page",
+    "taken_at": "2026-11-18T22:00:00+00:00",
+    "video_id": "e19_cafeina"
+  },
+  {
+    "id": "e24_proteina@2026-11-18T22:00:00+00:00@youtube_public_page",
+    "metrics": {
+      "public_views": 1000
+    },
+    "note": "Public count; YouTube rounds ≥1000 to 0.1 K.",
+    "provenance": "measured",
+    "source": "youtube_public_page",
+    "taken_at": "2026-11-18T22:00:00+00:00",
+    "video_id": "e24_proteina"
+  },
+  {
+    "id": "_channel@2026-11-13T23:59:00-05:00@metricool_ytev",
+    "metrics": {
+      "channel_daily_views": 2715,
+      "channel_subscribers": 13
+    },
+    "note": "",
+    "provenance": "measured",
+    "source": "metricool_ytev",
+    "taken_at": "2026-11-13T23:59:00-05:00",
+    "video_id": "_channel"
+  },
+  {
+    "id": "_channel@2026-11-14T23:59:00-05:00@metricool_ytev",
+    "metrics": {
+      "channel_daily_views": 3811,
+      "channel_subscribers": 16
+    },
+    "note": "",
+    "provenance": "measured",
+    "source": "metricool_ytev",
+    "taken_at": "2026-11-14T23:59:00-05:00",
+    "video_id": "_channel"
+  },
+  {
+    "id": "_channel@2026-11-15T23:59:00-05:00@metricool_ytev",
+    "metrics": {
+      "channel_daily_views": 2745,
+      "channel_subscribers": 20
+    },
+    "note": "",
+    "provenance": "measured",
+    "source": "metricool_ytev",
+    "taken_at": "2026-11-15T23:59:00-05:00",
+    "video_id": "_channel"
+  },
+  {
+    "id": "_channel@2026-11-16T23:59:00-05:00@metricool_ytev",
+    "metrics": {
+      "channel_subscribers": 23
+    },
+    "note": "",
+    "provenance": "measured",
+    "source": "metricool_ytev",
+    "taken_at": "2026-11-16T23:59:00-05:00",
+    "video_id": "_channel"
+  },
+  {
+    "id": "_channel@2026-11-17T23:59:00-05:00@metricool_ytev",
+    "metrics": {
+      "channel_subscribers": 26
+    },
+    "note": "",
+    "provenance": "measured",
+    "source": "metricool_ytev",
+    "taken_at": "2026-11-17T23:59:00-05:00",
+    "video_id": "_channel"
+  },
+  {
+    "id": "_channel@2026-11-18T23:59:00-05:00@metricool_ytev",
+    "metrics": {
+      "channel_subscribers": 26
+    },
+    "note": "",
+    "provenance": "measured",
+    "source": "metricool_ytev",
+    "taken_at": "2026-11-18T23:59:00-05:00",
+    "video_id": "_channel"
+  }
+]
