@@ -73,7 +73,7 @@ class Hud:
 
 
 # ------------------------------------------------------------------ 1. hook close-up
-def hook_closeup(bg: Callable, hudl: Hud, beats, texts, t_punch, side=None):
+def hook_closeup(bg: Callable, hudl: Hud, beats, texts, t_punch, side=None, side_xy=(236, 250), side_scale=2.2):
     """bg(g) -> image. beats = [(t, mood, tongue_out)] (last one whose t <= g wins).
     side = (t_in, t_out, sprite_fn(g), t_cross) — an icon beside Leo that gets crossed out.
     t_punch = snap zoom to the mouth/face with glitch."""
@@ -89,9 +89,9 @@ def hook_closeup(bg: Callable, hudl: Hud, beats, texts, t_punch, side=None):
         paste(img, face, 135, 345, scale=2.0)
         if side and side[0] - 0.1 < g < side[1]:
             s = pop_scale(g, side[0] - 0.1)
-            paste_scaled(img, side[2](g), 236, 250, s * 2.2)
+            paste_scaled(img, side[2](g), side_xy[0], side_xy[1], s * side_scale)
             if g > side[3]:
-                cross(ImageDraw.Draw(img), 236, 230, 22)
+                cross(ImageDraw.Draw(img), side_xy[0], side_xy[1] - 20, 22)
         z = lerp(1.25, 1.0, ease_out(prog(g, 0, 0.45))) + 0.04 * prog(g, 0.5, 5.0)
         cy = 240
         if g > t_punch - 0.1:

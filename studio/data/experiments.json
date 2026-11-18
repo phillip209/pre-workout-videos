@@ -1,5 +1,6 @@
 [
   {
+    "blocker": "ElevenLabs connector workspace 96/10000 credits; no ELEVENLABS_API_KEY",
     "control": "story Shorts b01v2-b04 (57-62% stayed)",
     "created_at": "2026-11-18T19:24:59+00:00",
     "hypothesis": "H1: higher stayed-to-watch (>70%) unlocks feed expansion",
@@ -9,8 +10,13 @@
       "public_views"
     ],
     "observation": "24h, 72h, 7d",
-    "status": "planned",
+    "status": "blocked_on_voice",
     "test": "next 2 story Shorts, same duration ~40 s",
+    "test_videos": [
+      "b05_caminar",
+      "b06_escaleras"
+    ],
+    "updated_at": "2026-11-18T19:29:59+00:00",
     "variable": "first frame + first sentence (outcome shown first)"
   },
   {

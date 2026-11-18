@@ -181,7 +181,7 @@ def office_bg(t: float = 0.0, dusk: float = 0.0, clock: str = "16:00") -> Image.
     return img
 
 
-def stairs_bg(t: float = 0.0, climb: float = 0.0) -> Image.Image:
+def stairs_bg(t: float = 0.0, climb: float = 0.0, sign: bool = True) -> Image.Image:
     """Stairwell from the side; `climb` (px) scrolls the steps as the hero goes up."""
     from .font import draw_text
     img = gfx.new(W, H, P["deep"] + (255,))
@@ -194,9 +194,10 @@ def stairs_bg(t: float = 0.0, climb: float = 0.0) -> Image.Image:
         y = 120 + i * sh + ph
         d.polygon([(x - sw, y), (W + 40, y), (W + 40, H), (x - sw, H)], fill=P["steel"] if i % 2 else P["steel_l"])
         d.line([x - sw, y, x, y], fill=P["white"])
-    floor_n = int(climb // 140) + 1
-    d.rectangle([20, 86, 70, 118], fill=P["green_d"], outline=P["white"])
-    draw_text(img, f"P{floor_n}", 45, 94, color=P["white"], scale=2, align="center")
+    if sign:
+        floor_n = int(climb // 140) + 1
+        d.rectangle([20, 86, 70, 118], fill=P["green_d"], outline=P["white"])
+        draw_text(img, f"P{floor_n}", 45, 94, color=P["white"], scale=2, align="center")
     return img
 
 
