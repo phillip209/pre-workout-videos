@@ -58,9 +58,11 @@
       "avg_pct_viewed",
       "public_views"
     ],
+    "notes": "v2 replaced v1 (2-min claim removed). Still confounded with hook change vs voiced controls.",
     "observation": "24h, 72h, 7d",
     "status": "ready",
-    "test": "b05_caminar_sin_voz (39.8 s)",
+    "test": "b05_caminar_sin_voz v2 (42.2 s, comparison-question hook, Reynolds 2016)",
+    "updated_at": "2026-11-18T19:45:53+00:00",
     "variable": "narration (none) - NOTE: b05 also carries the EXP-001 outcome-first hook, so results cannot be attributed to a single variable"
   }
 ]

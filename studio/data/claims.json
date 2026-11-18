@@ -1,0 +1,29 @@
+[
+  {
+    "claim": "10 min walk after each meal vs 30 min once/day: post-meal glycaemia 12% lower",
+    "created_at": "2026-11-18T19:45:53+00:00",
+    "evidence": "RCT crossover, 41 adults T2D, 2 weeks",
+    "id": "b05-reynolds-12",
+    "limits": "T2D population, short term",
+    "source": "Reynolds 2016 Diabetologia 59:2572-2578",
+    "status": "verified"
+  },
+  {
+    "claim": "after the evening meal the reduction was 22%",
+    "created_at": "2026-11-18T19:45:53+00:00",
+    "evidence": "secondary analysis",
+    "id": "b05-reynolds-22",
+    "limits": "release figure",
+    "source": "University of Otago release on Reynolds 2016",
+    "status": "verified_secondary"
+  },
+  {
+    "claim": "walking 2 minutes after eating lowers glucose",
+    "created_at": "2026-11-18T19:45:53+00:00",
+    "evidence": "breaks ranged 2-30 min",
+    "id": "b05-2min",
+    "limits": "not an established single duration",
+    "source": "press coverage of Buffey 2022",
+    "status": "rejected"
+  }
+]
