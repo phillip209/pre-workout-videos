@@ -1,0 +1,45 @@
+[
+  {
+    "control": "story Shorts b01v2-b04 (57-62% stayed)",
+    "created_at": "2026-11-18T19:24:59+00:00",
+    "hypothesis": "H1: higher stayed-to-watch (>70%) unlocks feed expansion",
+    "id": "EXP-001",
+    "metrics": [
+      "stayed_to_watch_pct",
+      "public_views"
+    ],
+    "observation": "24h, 72h, 7d",
+    "status": "planned",
+    "test": "next 2 story Shorts, same duration ~40 s",
+    "variable": "first frame + first sentence (outcome shown first)"
+  },
+  {
+    "control": "story Shorts ~43 s (66-68% viewed)",
+    "created_at": "2026-11-18T19:24:59+00:00",
+    "hypothesis": "H4: 20-25 s cut exceeds 100% viewed via loops and gets wider reach",
+    "id": "EXP-002",
+    "metrics": [
+      "avg_pct_viewed",
+      "public_views"
+    ],
+    "observation": "24h, 72h, 7d",
+    "status": "planned",
+    "test": "one story cut to 20-25 s",
+    "variable": "duration"
+  },
+  {
+    "control": "current CTAs (~0 comments)",
+    "created_at": "2026-11-18T19:24:59+00:00",
+    "hypothesis": "H2: concrete low-effort CTA raises comments/shares",
+    "id": "EXP-003",
+    "metrics": [
+      "comments",
+      "shares",
+      "likes"
+    ],
+    "observation": "7d",
+    "status": "planned",
+    "test": "CTA asking for a concrete answer",
+    "variable": "CTA wording"
+  }
+]

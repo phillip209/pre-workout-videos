@@ -298,5 +298,167 @@
     "source": "metricool_ytev",
     "taken_at": "2026-11-18T23:59:00-05:00",
     "video_id": "_channel"
+  },
+  {
+    "id": "b01v2_azucar@2026-11-18T19:20:00+00:00@youtube_studio",
+    "metrics": {
+      "avg_pct_viewed": 68,
+      "avg_view_duration_s": 30,
+      "engaged_views": 769,
+      "likes": 26,
+      "public_views": 1200,
+      "stayed_to_watch_pct": 62.0,
+      "subscribers_gained": 1
+    },
+    "note": "Studio, since publication. public_views rounded by Studio (0.1 K).",
+    "provenance": "measured",
+    "source": "youtube_studio",
+    "taken_at": "2026-11-18T19:20:00+00:00",
+    "video_id": "b01v2_azucar"
+  },
+  {
+    "id": "b02_dormir@2026-11-18T19:20:00+00:00@youtube_studio",
+    "metrics": {
+      "avg_pct_viewed": 67,
+      "avg_view_duration_s": 29,
+      "engaged_views": 848,
+      "likes": 24,
+      "public_views": 1300,
+      "stayed_to_watch_pct": 57.3,
+      "subscribers_gained": 1
+    },
+    "note": "Studio, since publication. public_views rounded by Studio (0.1 K).",
+    "provenance": "measured",
+    "source": "youtube_studio",
+    "taken_at": "2026-11-18T19:20:00+00:00",
+    "video_id": "b02_dormir"
+  },
+  {
+    "id": "b03_cafe@2026-11-18T19:20:00+00:00@youtube_studio",
+    "metrics": {
+      "avg_pct_viewed": 66,
+      "avg_view_duration_s": 29,
+      "engaged_views": 845,
+      "likes": 31,
+      "public_views": 1300,
+      "stayed_to_watch_pct": 62.0,
+      "subscribers_gained": 5
+    },
+    "note": "Studio, since publication. public_views rounded by Studio (0.1 K).",
+    "provenance": "measured",
+    "source": "youtube_studio",
+    "taken_at": "2026-11-18T19:20:00+00:00",
+    "video_id": "b03_cafe"
+  },
+  {
+    "id": "b04_alcohol@2026-11-18T19:20:00+00:00@youtube_studio",
+    "metrics": {
+      "avg_pct_viewed": 54,
+      "avg_view_duration_s": 21,
+      "engaged_views": 747,
+      "likes": 12,
+      "public_views": 1300,
+      "stayed_to_watch_pct": 58.9,
+      "subscribers_gained": 1
+    },
+    "note": "Studio, since publication. public_views rounded by Studio (0.1 K).",
+    "provenance": "measured",
+    "source": "youtube_studio",
+    "taken_at": "2026-11-18T19:20:00+00:00",
+    "video_id": "b04_alcohol"
+  },
+  {
+    "id": "e15_musculo_grasa@2026-11-18T19:20:00+00:00@youtube_studio",
+    "metrics": {
+      "avg_pct_viewed": 49,
+      "avg_view_duration_s": 28,
+      "engaged_views": 1000,
+      "likes": 38,
+      "public_views": 1600,
+      "stayed_to_watch_pct": 66.4,
+      "subscribers_gained": 1
+    },
+    "note": "Studio, since publication. public_views rounded by Studio (0.1 K).",
+    "provenance": "measured",
+    "source": "youtube_studio",
+    "taken_at": "2026-11-18T19:20:00+00:00",
+    "video_id": "e15_musculo_grasa"
+  },
+  {
+    "id": "e20_musculo_pesa@2026-11-18T19:20:00+00:00@youtube_studio",
+    "metrics": {
+      "avg_pct_viewed": 54,
+      "avg_view_duration_s": 21,
+      "engaged_views": 786,
+      "likes": 19,
+      "public_views": 1200,
+      "stayed_to_watch_pct": 61.5,
+      "subscribers_gained": 3
+    },
+    "note": "Studio, since publication. public_views rounded by Studio (0.1 K).",
+    "provenance": "measured",
+    "source": "youtube_studio",
+    "taken_at": "2026-11-18T19:20:00+00:00",
+    "video_id": "e20_musculo_pesa"
+  },
+  {
+    "id": "e24_proteina@2026-11-18T19:20:00+00:00@youtube_studio",
+    "metrics": {
+      "likes": 28,
+      "public_views": 1000,
+      "stayed_to_watch_pct": 63.6,
+      "subscribers_gained": 0
+    },
+    "note": "Studio, since publication. public_views rounded by Studio (0.1 K).",
+    "provenance": "measured",
+    "source": "youtube_studio",
+    "taken_at": "2026-11-18T19:20:00+00:00",
+    "video_id": "e24_proteina"
+  },
+  {
+    "id": "v09_sentadilla@2026-11-18T19:20:00+00:00@youtube_studio",
+    "metrics": {
+      "avg_pct_viewed": 42,
+      "avg_view_duration_s": 17,
+      "engaged_views": 519,
+      "likes": 5,
+      "public_views": 1200,
+      "stayed_to_watch_pct": 39.3,
+      "subscribers_gained": 1
+    },
+    "note": "Studio, since publication. public_views rounded by Studio (0.1 K).",
+    "provenance": "measured",
+    "source": "youtube_studio",
+    "taken_at": "2026-11-18T19:20:00+00:00",
+    "video_id": "v09_sentadilla"
+  },
+  {
+    "id": "v03_proteina30g@2026-11-18T19:20:00+00:00@youtube_studio",
+    "metrics": {
+      "likes": 8,
+      "public_views": 1000,
+      "stayed_to_watch_pct": 32.0,
+      "subscribers_gained": 2
+    },
+    "note": "Studio, since publication. public_views rounded by Studio (0.1 K).",
+    "provenance": "measured",
+    "source": "youtube_studio",
+    "taken_at": "2026-11-18T19:20:00+00:00",
+    "video_id": "v03_proteina30g"
+  },
+  {
+    "id": "_channel@2026-11-18T19:20:00+00:00@youtube_studio",
+    "metrics": {
+      "engaged_views": 11200,
+      "likes": 347,
+      "public_views": 22500,
+      "stayed_to_watch_pct": 48.9,
+      "subscribers_gained": 23
+    },
+    "note": "Channel, last 28 days. Shorts traffic: Shorts feed 96.6 %, search 1.8 %, channel pages 0.8 %. Monthly audience 2.5 K, 99 % new viewers.",
+    "provenance": "measured",
+    "source": "youtube_studio",
+    "taken_at": "2026-11-18T19:20:00+00:00",
+    "video_id": "_channel"
   }
 ]
