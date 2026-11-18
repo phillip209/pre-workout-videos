@@ -1384,5 +1384,123 @@
     ],
     "slug": "b05_caminar_sin_voz",
     "status": "needs_manual_review"
+  },
+  {
+    "automated": [
+      {
+        "check": "video stream",
+        "expected": "h264",
+        "pass": true,
+        "value": "h264"
+      },
+      {
+        "check": "audio stream",
+        "expected": "aac",
+        "pass": true,
+        "value": "aac"
+      },
+      {
+        "check": "resolution 9:16",
+        "expected": "1080x1920",
+        "pass": true,
+        "value": "1080x1920"
+      },
+      {
+        "check": "frame rate",
+        "expected": ">= 30",
+        "pass": true,
+        "value": 30.0
+      },
+      {
+        "check": "duration",
+        "expected": "15.0-60.0 s",
+        "pass": true,
+        "value": 41.03
+      },
+      {
+        "check": "decodes cleanly",
+        "expected": 0,
+        "pass": true,
+        "value": 0
+      },
+      {
+        "check": "loudness",
+        "expected": "-14.0±2.0 LUFS",
+        "pass": true,
+        "value": -15.3
+      },
+      {
+        "check": "true peak",
+        "expected": "<= -0.5 dBFS",
+        "pass": true,
+        "value": -1.4
+      },
+      {
+        "check": "no long black frames",
+        "expected": "<= 0.5 s",
+        "pass": true,
+        "value": 0.0
+      },
+      {
+        "check": "no frozen picture",
+        "expected": "<= 0.7 s",
+        "pass": true,
+        "value": 0.0
+      },
+      {
+        "check": "real (not estimated) voice timing",
+        "expected": false,
+        "pass": true,
+        "value": false
+      },
+      {
+        "check": "narration starts immediately",
+        "expected": "<= 0.6 s",
+        "pass": true,
+        "value": 0.21
+      }
+    ],
+    "automated_pass": true,
+    "created": "2026-11-18T19:47:43+00:00",
+    "created_at": "2026-11-18T19:47:43+00:00",
+    "failed": [],
+    "file": "C:\\dev\\pre-workout-videos\\studio\\out\\b05_caminar\\b05_caminar.mp4",
+    "id": "b05_caminar@2026-11-18T19:47:43+00:00",
+    "manual": [
+      {
+        "item": "hook understandable in the first 2 s without sound",
+        "status": "pending"
+      },
+      {
+        "item": "clear objective and conflict",
+        "status": "pending"
+      },
+      {
+        "item": "every scene adds something new",
+        "status": "pending"
+      },
+      {
+        "item": "payoff answers the hook",
+        "status": "pending"
+      },
+      {
+        "item": "character consistency across scenes",
+        "status": "pending"
+      },
+      {
+        "item": "subtitles readable and synced (spot-check)",
+        "status": "pending"
+      },
+      {
+        "item": "scientific claims match the recorded sources",
+        "status": "pending"
+      },
+      {
+        "item": "title/description/hashtags in Spanish, relevant, not misleading",
+        "status": "pending"
+      }
+    ],
+    "slug": "b05_caminar",
+    "status": "needs_manual_review"
   }
 ]
